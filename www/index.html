@@ -42,42 +42,39 @@
     <script src="https://maps.google.com/maps/api/js?libraries=placeses,visualization,drawing,geometry,places"></script>
   </head>
   <body ng-app="starter" ng-controller="mainCtrl">
-
     <ion-pane>
       <ion-header-bar class="bar-stable">
         <h1 class="title">Ricepo Map Test</h1>
       </ion-header-bar>
       <ion-content>
-        <!-- scroll not working -->
-        <!-- <ion-scroll scrollY="true" overflow-scroll="false"> -->
-          <div ng-repeat = "area in areas track by $index">
-            <div map-lazy-load="https://maps.google.com/maps/api/js">
-              <ng-map center="40.758896, -73.985130" zoom="12">
-               <shape name="polygon" 
-                 paths="{{area.path}}"
-                 stroke-color="#FF0000"
-                 stroke-opacity="0.8"
-                 stroke-weight="2"
-                 fill-color="#FF0000"
-                 fill-opacity="0.35">
-               </shape>
-              </ng-map>
-            </div>
-            <!-- initalize the showGeoJSON array for existing index-->
-            <button type="button" class="btn btn-primary" 
-                    ng-init="showGeoJSON[$index] = false" 
-                    ng-click="showGeoJSON[$index] = !showGeoJSON[$index];stringifyPath($index)">
-              GeoJSON
-            </button>
-            <div class="form-group" ng-show="showGeoJSON[$index]">
-              <label for="comment">Comment:</label>
-              <textarea class="form-control" rows="5" cols="20" ng-model="textAreas[$index]"></textarea>
-            </div>
-            <hr>
+        <div ng-repeat = "area in areas track by $index" ng-show="!area.removed">
+          <div map-lazy-load="https://maps.google.com/maps/api/js">
+            <ng-map center="40.758896, -73.985130" zoom="12">
+             <shape name="polygon" 
+               paths="{{area.path}}"
+               stroke-color="#FF0000"
+               stroke-opacity="0.8"
+               stroke-weight="2"
+               fill-color="#FF0000"
+               fill-opacity="0.35">
+             </shape>
+            </ng-map>
           </div>
+          <!-- initalize the showGeoJSON array for existing index-->
+          <button type="button" class="btn btn-primary" 
+                  ng-init="showGeoJSON[$index] = false" 
+                  ng-click="showGeoJSON[$index] = !showGeoJSON[$index];stringifyPath($index)">
+            GeoJSON
+          </button>
+          <div class="form-group" ng-show="showGeoJSON[$index]">
+            <label for="comment">Comment:</label>
+            <textarea class="form-control" rows="5" cols="20" ng-model="textAreas[$index]"></textarea>
+          </div>
+          <button type="button" class="btn btn-danger" ng-click="removeArea($index)">Remove</button>
           <hr>
-          <button type="button" class="btn btn-primary" ng-click="add()">Add Delivery Zone</button>
-        </ion-scroll>
+        </div>
+        <hr>
+        <button type="button" class="btn btn-primary" ng-click="add()">Add Delivery Zone</button>
       </ion-content>
     </ion-pane>
   </body>

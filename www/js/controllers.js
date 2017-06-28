@@ -49,27 +49,41 @@ app.controller('mainCtrl',function($scope){
 			        ];
 	$scope.areas = [
 		{
+			type:"polygon",
 			path:$scope.testPath,
-			deleted:false
+			removed:false
 		}
 		// ,
 		// {
+		// 	type:"polygon",
 		// 	path:$scope.testPath1,
-		// 	deleted:false
+		// 	removed:false
 		// }
 	];
 	localStorage.setItem('storedAreas', JSON.stringify($scope.areas));
 
 	$scope.add = function(){
-		$scope.areas.push({path:"",deleted:false});
+		$scope.areas.push({type:"polygon",path:"",removed:false});
 		localStorage.setItem('storedAreas', JSON.stringify($scope.areas));
-		$scope.areas = localStorage.getItem('storedAreas');
+		//$scope.areas = localStorage.getItem('storedAreas');
 	}
 
 	$scope.textAreas = [];
 	$scope.stringifyPath = function(index){
 		$scope.textAreas[index] = JSON.stringify($scope.areas[index]); 
 
+	}
+	$scope.removeArea = function(index){
+		$scope.areas[index].removed = true;
+	}
+
+	$scope.isValidJson = function(json) {
+		try {
+	        JSON.parse(json);
+	        return true;
+	    } catch (e) {
+	        return false;
+	    }
 	}
 	
 });
