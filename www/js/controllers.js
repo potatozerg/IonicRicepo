@@ -25,10 +25,6 @@ app.controller('mainCtrl',function($scope){
 					      40.75453936473234,-73.99188995361328
 					    ]
 					];
-			
-	//$scope.testPathString = JSON.stringify($scope.testPath);
-
-
 	$scope.testPath1 = [
 			            [
 			              
@@ -51,22 +47,22 @@ app.controller('mainCtrl',function($scope){
 		{
 			type:"polygon",
 			path:$scope.testPath,
-			removed:false
 		}
-		// ,
-		// {
-		// 	type:"polygon",
-		// 	path:$scope.testPath1,
-		// 	removed:false
-		// }
+		,
+		{
+			type:"polygon",
+			path:$scope.testPath1,
+		}
 	];
+
+	//load localStorage
 	if(localStorage.getItem('storedAreas') != $scope.areas && (localStorage.getItem('storedAreas') != null)){
 		$scope.areas = localStorage.getItem('storedAreas');
 	}
 	localStorage.setItem('storedAreas', JSON.stringify($scope.areas));
 
 	$scope.add = function(){
-		$scope.areas.push({type:"polygon",path:"",removed:false});
+		$scope.areas.push({type:"polygon",path:""});
 		localStorage.setItem('storedAreas', JSON.stringify($scope.areas));
 		//$scope.areas = localStorage.getItem('storedAreas');
 	}
@@ -76,8 +72,10 @@ app.controller('mainCtrl',function($scope){
 		$scope.textAreas[index] = JSON.stringify($scope.areas[index]); 
 
 	}
+
+
 	$scope.removeArea = function(index){
-		$scope.areas[index].removed = true;
+		$scope.areas.splice(index,1);
 	}
 
 	$scope.isValidJson = function(json) {
@@ -95,6 +93,11 @@ app.controller('mainCtrl',function($scope){
    		}else{
    			document.getElementById("textareaId"+index).style.color = "black";
    			//reflect the change to the map
+   			//store it in localStorage
+   			console.log($scope.textAreas[index]);
+   			//parse it back
+   			$scope.areas[index] = JSON.parse($scope.textAreas[index]);
+   			//need two way binding for the path
    		}	
    	}
 });
