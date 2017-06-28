@@ -2,7 +2,7 @@ var app = angular.module('starter.controllers', []);
 
 app.controller('mainCtrl',function($scope){
 
-	$scope.showGeoJSON = [];
+	//2 test case
 	$scope.testPath = [
 					    [
 					      
@@ -47,8 +47,7 @@ app.controller('mainCtrl',function($scope){
 		{
 			type:"polygon",
 			path:$scope.testPath,
-		}
-		,
+		},
 		{
 			type:"polygon",
 			path:$scope.testPath1,
@@ -64,7 +63,6 @@ app.controller('mainCtrl',function($scope){
 	$scope.add = function(){
 		$scope.areas.push({type:"polygon",path:""});
 		localStorage.setItem('storedAreas', JSON.stringify($scope.areas));
-		//$scope.areas = localStorage.getItem('storedAreas');
 	}
 
 	$scope.textAreas = [];
@@ -72,7 +70,6 @@ app.controller('mainCtrl',function($scope){
 		$scope.textAreas[index] = JSON.stringify($scope.areas[index]); 
 
 	}
-
 
 	$scope.removeArea = function(index){
 		$scope.areas.splice(index,1);
