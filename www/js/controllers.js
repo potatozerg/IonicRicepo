@@ -60,6 +60,9 @@ app.controller('mainCtrl',function($scope){
 		// 	removed:false
 		// }
 	];
+	if(localStorage.getItem('storedAreas') != $scope.areas && (localStorage.getItem('storedAreas') != null)){
+		$scope.areas = localStorage.getItem('storedAreas');
+	}
 	localStorage.setItem('storedAreas', JSON.stringify($scope.areas));
 
 	$scope.add = function(){
@@ -85,5 +88,13 @@ app.controller('mainCtrl',function($scope){
 	        return false;
 	    }
 	}
-	
+   	$scope.checkInput = function(index){
+
+   		if(!$scope.isValidJson($scope.textAreas[index])){
+   			document.getElementById("textareaId"+index).style.color = "red";
+   		}else{
+   			document.getElementById("textareaId"+index).style.color = "black";
+   			//reflect the change to the map
+   		}	
+   	}
 });

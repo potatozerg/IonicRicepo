@@ -31,6 +31,7 @@
     <script src="cordova.js"></script>
     <script>
     (function(){
+      console.log(localStorage.getItem('storedAreas'));
       localStorage.removeItem('storedAreas');
     })();  
     </script>
@@ -47,7 +48,7 @@
         <h1 class="title">Ricepo Map Test</h1>
       </ion-header-bar>
       <ion-content>
-        <div ng-repeat = "area in areas track by $index" ng-show="!area.removed">
+        <div ng-repeat="area in areas track by $index" ng-show="!area.removed">
           <div map-lazy-load="https://maps.google.com/maps/api/js">
             <ng-map center="40.758896, -73.985130" zoom="12">
              <shape name="polygon" 
@@ -68,7 +69,15 @@
           </button>
           <div class="form-group" ng-show="showGeoJSON[$index]">
             <label for="comment">Comment:</label>
-            <textarea class="form-control" rows="5" cols="20" ng-model="textAreas[$index]"></textarea>
+            <textarea class="form-control" 
+                      id="textareaId{{$index}}" 
+                      rows="5" 
+                      cols="20" 
+                      ng-model="textAreas[$index]"
+                      ng-change="checkInput($index)" 
+                      style="color:black;">
+            </textarea>
+            
           </div>
           <button type="button" class="btn btn-danger" ng-click="removeArea($index)">Remove</button>
           <hr>
