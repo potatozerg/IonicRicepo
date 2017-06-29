@@ -2,7 +2,7 @@ var app = angular.module('starter.controllers', []);
 
 app.controller('mainCtrl',function($scope){
 
-	//2 test case
+	//2 test cases
 	$scope.testPath = [
 					    [
 					      
@@ -61,7 +61,8 @@ app.controller('mainCtrl',function($scope){
 		];
 		localStorage.setItem('storedAreas123', JSON.stringify($scope.areas));
 	}
-	
+	//Array that stores boolean if GeoJSON is showing
+	$scope.showGeoJSON = [];
 	//Array that stores stringified info
 	$scope.textAreas = [];
 	$scope.areas.forEach(function(e){
@@ -69,18 +70,25 @@ app.controller('mainCtrl',function($scope){
 			e.path = "";
 		}
 		$scope.textAreas.push(JSON.stringify(e));
+		$scope.showGeoJSON.push(false);
 	});
+
+	$scope.changeShowGeoJSON = function(index){
+		$scope.showGeoJSON[index] = !$scope.showGeoJSON[index];
+	}
 
 	$scope.add = function(){
 		$scope.areas.push({type:"polygon",path:"[[0,0]]"});
 		$scope.textAreas.push(JSON.stringify({type:"polygon",path:""}));
 		localStorage.setItem('storedAreas123', JSON.stringify($scope.areas));
+		$scope.showGeoJSON.push(false);
 	}
 
 	$scope.removeArea = function(index){
 		$scope.areas.splice(index,1);
 		$scope.textAreas.splice(index,1);
 		localStorage.setItem('storedAreas123', JSON.stringify($scope.areas));
+		$scope.showGeoJSON.splice(index,1);
 	}
 
 	$scope.isValidJson = function(json) {
