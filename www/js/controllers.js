@@ -43,58 +43,70 @@ app.controller('mainCtrl',function($scope){
 			              40.746736760718505,-73.98948669433594
 			            ]
 			        ];
-	$scope.areas = [
-		{
-			type:"polygon",
-			path:$scope.testPath,
-		},
-		{
-			type:"polygon",
-			path:$scope.testPath1,
-		}
-	];
+	
 
 	//load localStorage
-	if(localStorage.getItem('storedAreas') != $scope.areas && (localStorage.getItem('storedAreas') != null)){
-		$scope.areas = localStorage.getItem('storedAreas');
+	if(localStorage.getItem('storedAreas123') != null){
+		$scope.areas = JSON.parse(localStorage.getItem('storedAreas123'));
+	}else{
+		$scope.areas = [
+			{
+				type:"polygon",
+				path:$scope.testPath,
+			},
+			{
+				type:"polygon",
+				path:$scope.testPath1,
+			}
+		];
+		localStorage.setItem('storedAreas123', JSON.stringify($scope.areas));
 	}
-	localStorage.setItem('storedAreas', JSON.stringify($scope.areas));
+	
+	//Array that stores stringified info
+	$scope.textAreas = [];
+	$scope.areas.forEach(function(e){
+		if(e.path == "[[0,0]]") {
+			e.path = "";
+		}
+		$scope.textAreas.push(JSON.stringify(e));
+	});
 
 	$scope.add = function(){
-		$scope.areas.push({type:"polygon",path:""});
-		localStorage.setItem('storedAreas', JSON.stringify($scope.areas));
-	}
-
-	$scope.textAreas = [];
-	$scope.stringifyPath = function(index){
-		$scope.textAreas[index] = JSON.stringify($scope.areas[index]); 
-
+		$scope.areas.push({type:"polygon",path:"[[0,0]]"});
+		$scope.textAreas.push(JSON.stringify({type:"polygon",path:""}));
+		localStorage.setItem('storedAreas123', JSON.stringify($scope.areas));
 	}
 
 	$scope.removeArea = function(index){
 		$scope.areas.splice(index,1);
+		$scope.textAreas.splice(index,1);
+		localStorage.setItem('storedAreas123', JSON.stringify($scope.areas));
 	}
 
 	$scope.isValidJson = function(json) {
 		try {
-	        JSON.parse(json);
+	        var jsonObj = JSON.parse(json);
+	        if (jsonObj.path == "") return true;
+	        new Array(JSON.parse(jsonObj.path));
 	        return true;
 	    } catch (e) {
 	        return false;
 	    }
 	}
-   	$scope.checkInput = function(index){
 
-   		if(!$scope.isValidJson($scope.textAreas[index])){
+   	$scope.checkInput = function(index){
+   		let temp = $scope.textAreas[index];
+   		temp = temp.replace(/\s/g,"");
+   		console.log(temp);
+   		if(!$scope.isValidJson(temp)){
    			document.getElementById("textareaId"+index).style.color = "red";
    		}else{
    			document.getElementById("textareaId"+index).style.color = "black";
-   			//reflect the change to the map
-   			//store it in localStorage
-   			console.log($scope.textAreas[index]);
-   			//parse it back
-   			$scope.areas[index] = JSON.parse($scope.textAreas[index]);
-   			//need two way binding for the path
+   			$scope.areas[index] = JSON.parse(temp);
+   			if($scope.areas[index].path == "") {
+   				$scope.areas[index].path = "[[0,0]]";
+   			}
+   			localStorage.setItem('storedAreas123', JSON.stringify($scope.areas));
    		}	
    	}
 });

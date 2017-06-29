@@ -29,12 +29,6 @@
 
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
-    <script>
-    (function(){
-      console.log(localStorage.getItem('storedAreas'));
-      localStorage.removeItem('storedAreas');
-    })();  
-    </script>
     <!-- your app's js -->
     <script src="js/app.js"></script>
     <script src="js/controllers.js"></script>
@@ -64,7 +58,7 @@
           <!-- initalize the showGeoJSON array for existing index-->
           <button type="button" class="btn btn-primary" 
                   ng-init="showGeoJSON[$index] = false" 
-                  ng-click="showGeoJSON[$index] = !showGeoJSON[$index];stringifyPath($index)">
+                  ng-click="showGeoJSON[$index] = !showGeoJSON[$index]">
             GeoJSON
           </button>
           <div class="form-group" ng-show="showGeoJSON[$index]">
@@ -78,6 +72,7 @@
                       style="color:black;">
             </textarea>
           </div>
+          <hr>
           <button type="button" class="btn btn-danger" ng-click="removeArea($index)">Remove</button>
           <hr>
         </div>
