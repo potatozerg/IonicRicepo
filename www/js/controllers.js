@@ -52,11 +52,11 @@ app.controller('mainCtrl',function($scope){
 		$scope.areas = [
 			{
 				type:"polygon",
-				path:$scope.testPath,
+				path:JSON.stringify($scope.testPath),
 			},
 			{
 				type:"polygon",
-				path:$scope.testPath1,
+				path:JSON.stringify($scope.testPath1),
 			}
 		];
 		localStorage.setItem('storedAreas123', JSON.stringify($scope.areas));
