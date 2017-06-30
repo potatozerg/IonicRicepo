@@ -1,1 +1,43 @@
-/* Empty. Add your own CSS if you like */
+p.geoJSON{
+
+	font-size: 24px;
+	color: #6495ED;
+	margin: 10px;
+	padding-top: 10px;
+	padding-left: 20px;
+	cursor: pointer;
+}
+
+p.remove{
+	font-size: 24px;
+	color: #F08080;
+	margin: 10px;
+	padding-top: 10px;
+	padding-left: 20px;
+	cursor: pointer;
+
+}
+
+p.add{
+
+	font-size: 24px;
+	color: #6495ED;
+	margin: 10px;
+	padding-top: 10px;
+	padding-left: 20px;
+	cursor: pointer;
+
+}
+
+div.form-group{
+	width: 1000px;
+	margin: 10px;
+}
+
+ng-map{
+
+	margin: 10px;
+}
+hr{
+	margin: 10px;
+}
