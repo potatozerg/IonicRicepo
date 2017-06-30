@@ -41,41 +41,40 @@
         <h1 class="title">Ricepo Map Test</h1>
       </ion-header-bar>
       <ion-content>
-        <div ng-repeat="area in areas track by $index">
-          <div map-lazy-load="https://maps.google.com/maps/api/js">
-            <ng-map center="40.758896, -73.985130" zoom="12">
-             <shape name="polygon" 
-               paths="{{area.path}}"
-               stroke-color="#FF0000"
-               stroke-opacity="0.8"
-               stroke-weight="2"
-               fill-color="#FF0000"
-               fill-opacity="0.35">
-             </shape>
-            </ng-map>
+        <div class="container">
+          <div ng-repeat="area in areas track by $index">
+            <div map-lazy-load="https://maps.google.com/maps/api/js">
+              <ng-map center="40.758896, -73.985130" zoom="12">
+               <shape name="polygon" 
+                 paths="{{area.path}}"
+                 stroke-color="#FF0000"
+                 stroke-opacity="0.8"
+                 stroke-weight="2"
+                 fill-color="#FF0000"
+                 fill-opacity="0.35">
+               </shape>
+              </ng-map>
+            </div>
+            <button type="button" class="btn btn-primary" 
+                    ng-click="changeShowGeoJSON($index)">
+              GeoJSON
+            </button>
+            <div class="form-group" ng-show="showGeoJSON[$index]">
+              <textarea class="form-control" 
+                        id="textareaId{{$index}}" 
+                        rows="5" 
+                        cols="20" 
+                        ng-model="textAreas[$index]"
+                        ng-change="checkInput($index)" 
+                        style="color:black;">
+              </textarea>
+            </div>
+            <hr>
+            <button type="button" class="btn btn-danger" ng-click="removeArea($index)">Remove</button>
+            <hr>
           </div>
-          <!-- initalize the showGeoJSON array for existing index-->
-          <!-- ng-init="showGeoJSON[$index] = false" 
-                  ng-click="showGeoJSON[$index] = !showGeoJSON[$index]" -->
-          <button type="button" class="btn btn-primary" 
-                  ng-click="changeShowGeoJSON($index)">
-            GeoJSON
-          </button>
-          <div class="form-group" ng-show="showGeoJSON[$index]">
-            <textarea class="form-control" 
-                      id="textareaId{{$index}}" 
-                      rows="5" 
-                      cols="20" 
-                      ng-model="textAreas[$index]"
-                      ng-change="checkInput($index)" 
-                      style="color:black;">
-            </textarea>
-          </div>
-          <hr>
-          <button type="button" class="btn btn-danger" ng-click="removeArea($index)">Remove</button>
-          <hr>
+          <button type="button" class="btn btn-primary" ng-click="add()">Add Delivery Zone</button>
         </div>
-        <button type="button" class="btn btn-primary" ng-click="add()">Add Delivery Zone</button>
       </ion-content>
     </ion-pane>
   </body>
