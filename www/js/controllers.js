@@ -2,75 +2,82 @@ var app = angular.module('starter.controllers', []);
 
 app.controller('mainCtrl',function($scope){
 
-	//2 test cases
-	$scope.testPath = [
-					    [
-					      
-					      40.75453936473234,-73.99188995361328
-					    ],
-					    [
-					      
-					      40.74413568925235,-73.99703979492188
-					    ],
-					    [
-					     
-					      40.74907763805906,-73.9760971069336
-					    ],
-					    [
-					      40.75635984059143,-73.97506713867186
-					      
-					    ],
-					    [
-					      
-					      40.75453936473234,-73.99188995361328
-					    ]
-					];
-	$scope.testPath1 = [
-			            [
-			              
-			              40.746736760718505,-73.98948669433594
-			            ],
-			            [
-			              
-			              40.706148461723764,-74.01369094848633
-			            ],
-			            [
-			              
-			              40.7375024965684,-73.98056030273438
-			            ],
-			            [
-			              
-			              40.746736760718505,-73.98948669433594
-			            ]
-			        ];
-	
+
+	$scope.testJSON = {
+						  "type": "Feature",
+						  "properties": {},
+						  "geometry": {
+						    "type": "Polygon",
+						    "coordinates": [
+						      [
+						        [
+						          -73.9932632446289,
+						          40.763381209080215
+						        ],
+						        [
+						          -74.0035629272461,
+						          40.7342506899291
+						        ],
+						        [
+						          -73.99669647216797,
+						          40.74205475883487
+						        ],
+						        [
+						          -73.97815704345703,
+						          40.746736760718505
+						        ],
+						        [
+						          -73.94519805908203,
+						          40.757400090129245
+						        ],
+						        [
+						          -73.9932632446289,
+						          40.763381209080215
+						        ]
+						      ]
+						    ]
+						  }
+						}
 
 	//load localStorage
 	if(localStorage.getItem('storedAreas123') != null){
 		$scope.areas = JSON.parse(localStorage.getItem('storedAreas123'));
 	}else{
-		$scope.areas = [
-			{
-				type:"polygon",
-				path:JSON.stringify($scope.testPath),
-			},
-			{
-				type:"polygon",
-				path:JSON.stringify($scope.testPath1),
-			}
-		];
+		$scope.areas = [];
+		$scope.areas.push($scope.testJSON);
 		localStorage.setItem('storedAreas123', JSON.stringify($scope.areas));
 	}
+
 	//Array that stores boolean if GeoJSON is showing
 	$scope.showGeoJSON = [];
 	//Array that stores stringified info
 	$scope.textAreas = [];
+	//Array that stores google path
+	$scope.googlePath = [];
+	//GeoJSON => Google Path
+	$scope.translateCoordinates = function(json){
+
+		let temp = angular.copy(json.geometry.coordinates[0]);
+		temp.forEach(function(e,i){
+			let t = temp[i][0];
+			temp[i][0] = temp[i][1];
+			temp[i][1] = t;
+		});
+		return temp;
+	}
+	console.log($scope.areas);
 	$scope.areas.forEach(function(e){
-		if(e.path == "[[0,0]]") {
-			e.path = "";
+		if(JSON.stringify(e.geometry.coordinates) == "[[[0,0]]]") {
+			//e.geometry.coordinates = [[[0,0]]];
+			var tempe = angular.copy(e);
+			tempe.geometry.coordinates = [];
+			$scope.textAreas.push(JSON.stringify(tempe));
+		} else {
+			$scope.textAreas.push(JSON.stringify(e));
 		}
-		$scope.textAreas.push(JSON.stringify(e));
+		
 		$scope.showGeoJSON.push(false);
+		$scope.googlePath.push($scope.translateCoordinates(e));
 	});
 
 	$scope.changeShowGeoJSON = function(index){
@@ -78,10 +85,11 @@ app.controller('mainCtrl',function($scope){
 	}
 
 	$scope.add = function(){
-		$scope.areas.push({type:"polygon",path:"[[0,0]]"});
-		$scope.textAreas.push(JSON.stringify({type:"polygon",path:""}));
+		$scope.areas.push({ "type": "Feature", "properties": {}, "geometry": { "type": "Polygon", "coordinates": [[[0,0]]] } });
+		$scope.textAreas.push(JSON.stringify({ "type": "Feature", "properties": {}, "geometry": { "type": "Polygon", "coordinates": "" } }));
 		localStorage.setItem('storedAreas123', JSON.stringify($scope.areas));
 		$scope.showGeoJSON.push(false);
+		$scope.googlePath.push([[0,0]]);
 	}
 
 	$scope.removeArea = function(index){
@@ -89,13 +97,14 @@ app.controller('mainCtrl',function($scope){
 		$scope.textAreas.splice(index,1);
 		localStorage.setItem('storedAreas123', JSON.stringify($scope.areas));
 		$scope.showGeoJSON.splice(index,1);
+		$scope.googlePath.splice(index,1);
 	}
 
 	$scope.isValidJson = function(json) {
 		try {
 	        var jsonObj = JSON.parse(json);
-	        if (jsonObj.path == "") return true;
-	        new Array(JSON.parse(jsonObj.path));
+	        if (jsonObj.geometry.coordinates == "") return true;
+	        new Array(jsonObj.geometry.coordinates[0]);
 	        return true;
 	    } catch (e) {
 	        return false;
@@ -105,16 +114,18 @@ app.controller('mainCtrl',function($scope){
    	$scope.checkInput = function(index){
    		let temp = $scope.textAreas[index];
    		temp = temp.replace(/\s/g,"");
-   		console.log(temp);
    		if(!$scope.isValidJson(temp)){
    			document.getElementById("textareaId"+index).style.color = "red";
    		}else{
    			document.getElementById("textareaId"+index).style.color = "black";
    			$scope.areas[index] = JSON.parse(temp);
-   			if($scope.areas[index].path == "") {
-   				$scope.areas[index].path = "[[0,0]]";
+   			$scope.googlePath[index] = $scope.translateCoordinates($scope.areas[index]);
+   			if($scope.areas[index].geometry.coordinates == "") {
+   				$scope.areas[index].geometry.coordinates = "[[[0,0]]]";
+   				$scope.googlePath[path] = [[0,0]];			
    			}
    			localStorage.setItem('storedAreas123', JSON.stringify($scope.areas));
+
    		}	
    	}
 });
